@@ -16,5 +16,5 @@ mongoose
     });
   })
   .catch((error) => {
-    console.log("Serverul nu ruleaza! Eroare:", error.message);
+    console.log("Serverul nu ruleaza! Erroare:", error.message);
   });

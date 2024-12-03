@@ -1,27 +1,64 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
-const userSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    token: { type: String },
+const Schema = mongoose.Schema;
+
+const user = new Schema({
+  email: {
+    type: String,
+    required: [true, "Please set email"],
+    minLength: 2,
   },
-  { timestamps: true }
-);
-
-// Criptarea parolei
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+  password: {
+    type: String,
+    required: [true, "Please set password"],
+    minLength: 2,
+  },
+  name: {
+    type: String,
+    required: [true, "Please set Username"],
+    minLength: 2,
+  },
+  calories: {
+    type: Number,
+    default: null,
+  },
+  height: {
+    type: Number,
+    default: null,
+  },
+  age: {
+    type: Number,
+    default: null,
+  },
+  bloodType: {
+    type: String,
+    default: null,
+  },
+  token: {
+    type: String,
+    default: null,
+  },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: function () {
+      return !this.verify;
+    },
+  },
 });
 
-// Validarea parolei
-userSchema.methods.validPassword = function (password) {
+user.methods.setPassword = function (password) {
+  this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(5));
+};
+
+user.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model("User", user, "users");
+
+module.exports = User;

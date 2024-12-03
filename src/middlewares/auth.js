@@ -1,28 +1,20 @@
-const jwt = require("jsonwebtoken");
-const User = require("../services/schemas/Users");
-require("dotenv").config();
+const passport = require("passport");
 
-const secret = process.env.SECRET;
-
-const authMiddleware = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      throw new Error("Lipsă token. Neautorizat!");
-    }
-
-    const decoded = jwt.verify(token, secret);
-    const user = await User.findById(decoded._id);
-
-    if (!user || user.token !== token) {
-      throw new Error("Neautorizat!");
+const auth = (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (error, user) => {
+    if (!user || error) {
+      return res.status(401).json({
+        status: "Error",
+        code: 401,
+        message: "Unauthorized",
+      });
     }
 
     req.user = user;
     next();
-  } catch (error) {
-    res.status(401).json({ message: "Neautorizat!" });
-  }
+  })(req, res, next);
 };
 
-module.exports = authMiddleware;
+module.exports = {
+  auth,
+};

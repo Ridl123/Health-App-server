@@ -3,6 +3,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const passport = require("passport");
 
+require("./middlewares/passportConfig");
+
 const corsOptions = require("./cors");
 const contactsRouter = require("./routes/routes");
 
@@ -11,6 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(morgan("tiny"));
+
 app.use(passport.initialize());
 
 app.use("/health", contactsRouter);
