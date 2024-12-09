@@ -38,13 +38,13 @@ const createAccount = async ({ email, name, password }) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "ramonspuci@gmail.com",
+        user: "purdelrichard2003@gmail.com",
         pass: pass,
       },
     });
 
     const mailOptions = {
-      from: "ramonspuci@gmail.com",
+      from: "purdelrichard2003@gmail.com",
       to: `${email}`,
       subject: "Verification email Slim Mom account.",
       text: `Your account verification code is: ${uniqueValidationCode}, http://localhost:3000/health/account/verify/${uniqueValidationCode}`,
@@ -222,13 +222,13 @@ const verifyEmailResend = async (email) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "ramonspuci@gmail.com",
+        user: "purdelrichard2003@gmail.com",
         pass: pass,
       },
     });
 
     const mailOptions = {
-      from: "ramonspuci@gmail.com",
+      from: "purdelrichard2003@gmail.com",
       to: `${email}`,
       subject: "Verification email Slim Mom account",
       text: `Your account verification code is ${uniqueValidationCode}, http://localhost:3000/health/account/verify/${uniqueValidationCode}`,
