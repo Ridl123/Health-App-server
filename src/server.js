@@ -1,20 +1,25 @@
 const app = require("./app");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+const dotenv = require("dotenv"); // Load environment variables from .env file
 
 dotenv.config();
 
-const PORT = process.env.PORT;
-const DB_URL = process.env.DB_URL;
+const port = process.env.PORT || 5000;
 
+// Connect to MongoDB using the URI from the .env file
 mongoose
-  .connect(DB_URL)
-  .then(() => {
-    console.log("Serverul ruleaza!");
-    app.listen(PORT, () => {
-      console.log(`Server is running. Use our API on port: ${PORT}`);
-    });
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
-  .catch((error) => {
-    console.log("Serverul nu ruleaza! Erroare:", error.message);
+  .then(() => {
+    console.log("MongoDB connected successfully");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
   });
+
+// Your other server setup (middleware, routes, etc.)
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
